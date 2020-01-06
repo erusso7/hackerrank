@@ -1,0 +1,26 @@
+{
+  "name": "erusso/hackerrank",
+  "description": "HackerRank Interview Preparation Kit collection",
+  "type": "project",
+  "require-dev": {
+    "symfony/var-dumper": "^5.0",
+    "phpunit/phpunit": "^8.5"
+  },
+  "authors": [
+    {
+      "name": "Ezequiel Russo",
+      "email": "ezequiel.russo@kupeka.com"
+    }
+  ],
+  "require": {},
+  "autoload": {
+    "psr-4": {
+      "App\\": "src/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Tests\\": "tests/"
+    }
+  }
+}
