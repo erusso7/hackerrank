@@ -1,6 +1,6 @@
 <?php declare(strict_types = 1);
 
-namespace App\Queues;
+namespace App\Lists;
 
 class FIFO
 {

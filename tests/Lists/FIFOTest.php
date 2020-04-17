@@ -2,7 +2,7 @@
 
 namespace Tests\Queues;
 
-use App\Queues\FIFO;
+use App\Lists\FIFO;
 use PHPUnit\Framework\TestCase;
 
 class FIFOTest extends TestCase
