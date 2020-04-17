@@ -33,25 +33,33 @@ class LRUTest extends TestCase
                 ],
             ],
             'The cache has some element' => [
-                'elements to store' => [1 => 1],
+                'elements to store' => ['key-1' => 1],
                 'expected results' => [
-                    1 => 1,
+                    'key-1' => 1,
                 ],
             ],
             'The cache is full' => [
-                'elements to store' => [1 => 1, 2 => 2],
+                'elements to store' => [
+                    'key-1' => 1,
+                    'key-2' => 2,
+                ],
                 'expected results' => [
-                    1 => 1,
-                    2 => 2,
+                    'key-1' => 1,
+                    'key-2' => 2,
                 ],
             ],
             'The cache is over the capacity' => [
-                'elements to store' => [1 => 1, 2 => 2, 3 => 3, 4 => 4],
+                'elements to store' => [
+                    'key-1' => 1,
+                    'key-2' => 2,
+                    'key-3' => 3,
+                    'key-4' => 4,
+                ],
                 'expected results' => [
-                    1 => -1,
-                    2 => -1,
-                    3 => 3,
-                    4 => 4,
+                    'key-1' => -1,
+                    'key-2' => -1,
+                    'key-3' => 3,
+                    'key-4' => 4,
                 ],
             ],
         ];
@@ -61,19 +69,18 @@ class LRUTest extends TestCase
     {
         $cache = new LRU(2);
 
-        $cache->put(1, 1);
-        $cache->put(2, 2);
-        $this->assertEquals(1, $cache->get(1));
+        $cache->put('key-1', 1);
+        $cache->put('key-2', 2);
+        $this->assertEquals(1, $cache->get('key-1'));
+        $cache->put('key-3', 3);
+        $this->assertEquals(-1, $cache->get('key-2'));
+        $this->assertEquals(3, $cache->get('key-3'));
+        $this->assertEquals(1, $cache->get('key-1')); //This get will refresh the last hit.
 
-        $cache->put(3, 3);
-        $this->assertEquals(-1, $cache->get(2));
-        $this->assertEquals(3, $cache->get(3));
-        $this->assertEquals(1, $cache->get(1)); //This get will refresh the last hit.
-
-        $cache->put(4, 4);
-        $this->assertEquals(-1, $cache->get(2));
-        $this->assertEquals(-1, $cache->get(3));
-        $this->assertEquals(1, $cache->get(1));
-        $this->assertEquals(4, $cache->get(4));
+        $cache->put('key-4', 4);
+        $this->assertEquals(-1, $cache->get('key-2'));
+        $this->assertEquals(-1, $cache->get('key-3'));
+        $this->assertEquals(1, $cache->get('key-1'));
+        $this->assertEquals(4, $cache->get('key-4'));
     }
 }
