@@ -83,4 +83,21 @@ class LRUTest extends TestCase
         $this->assertEquals(1, $cache->get('key-1'));
         $this->assertEquals(4, $cache->get('key-4'));
     }
+
+    public function testItShouldKeepTheRecentInABiggerQueue()
+    {
+        $cache = new LRU(3);
+        $cache->put('key-1', 1);
+        $cache->put('key-2', 2);
+        $cache->put('key-3', 3);
+        $this->assertEquals(3, $cache->get('key-3'));
+        $this->assertEquals(2, $cache->get('key-2'));
+        $this->assertEquals(1, $cache->get('key-1'));
+
+        $cache->put('key-4', 4);
+        $this->assertEquals(-1, $cache->get('key-3'));
+        $this->assertEquals(2, $cache->get('key-2'));
+        $this->assertEquals(1, $cache->get('key-1'));
+        $this->assertEquals(4, $cache->get('key-4'));
+    }
 }

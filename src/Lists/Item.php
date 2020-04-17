@@ -7,10 +7,17 @@ class Item
     private ?self $next = null;
     private ?self $prev = null;
     private $value;
+    private $key;
 
-    public function __construct($value)
+    public function __construct($value, $key = null)
     {
         $this->value = $value;
+        $this->key = $key;
+    }
+
+    public function key()
+    {
+        return $this->key;
     }
 
     public function setNext(?self $item)
