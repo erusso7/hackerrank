@@ -5,6 +5,7 @@ namespace App\Cache;
 class LRU
 {
     private array $store = [];
+    private LRUItem $lru;
     private int $size;
 
     public function __construct(int $size)
@@ -17,7 +18,9 @@ class LRU
         if (count($this->store) === $this->size) {
             $this->removeTheLeastRecentlyUsed();
         }
-        $this->store[(string)$key] = new LRUItem($key, $value);
+        $newItem = new LRUItem($key, $value);
+        $this->store[$key] = $newItem;
+        $this->lru = $newItem;
     }
 
     public function get($key)
