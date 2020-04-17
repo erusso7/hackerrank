@@ -22,9 +22,37 @@ class FIFOTest extends TestCase
         $queue->push(3);
         $queue->push(4);
 
-        $this->assertSame(1, $queue->pop());
-        $this->assertSame(2, $queue->pop());
-        $this->assertSame(3, $queue->pop());
-        $this->assertSame(4, $queue->pop());
+        $this->assertEquals(1, $queue->pop());
+        $this->assertEquals(2, $queue->pop());
+        $this->assertEquals(3, $queue->pop());
+        $this->assertEquals(4, $queue->pop());
+    }
+
+    public function testALimitedWillDropTheLastElement()
+    {
+        $queue = new FIFO(2);
+
+        $queue->push(1);
+        $queue->push(2);
+        $queue->push(3);
+        $queue->push(4);
+
+        $this->assertEquals(1, $queue->pop());
+        $this->assertEquals(2, $queue->pop());
+        $this->assertNull($queue->pop());
+    }
+
+    public function testALimitedWillDropTheFirstElement()
+    {
+        $queue = new FIFO(2, FIFO::DROP_FIRST);
+
+        $queue->push(1);
+        $queue->push(2);
+        $queue->push(3);
+        $queue->push(4);
+
+        $this->assertEquals(3, $queue->pop());
+        $this->assertEquals(4, $queue->pop());
+        $this->assertNull($queue->pop());
     }
 }

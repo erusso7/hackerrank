@@ -4,7 +4,8 @@ namespace App\Lists;
 
 class Item
 {
-    private ?Item $next = null;
+    private ?self $next = null;
+    private ?self $prev = null;
     private $value;
 
     public function __construct($value)
@@ -12,14 +13,24 @@ class Item
         $this->value = $value;
     }
 
-    public function setNext(?Item $item)
+    public function setNext(?self $item)
     {
         $this->next = $item;
     }
 
-    public function next(): ?Item
+    public function next(): ?self
     {
         return $this->next;
+    }
+
+    public function setPrev(?self $prev): void
+    {
+        $this->prev = $prev;
+    }
+
+    public function prev(): ?self
+    {
+        return $this->prev;
     }
 
     public function value()
