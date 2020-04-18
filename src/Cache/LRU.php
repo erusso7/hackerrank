@@ -4,7 +4,7 @@ namespace App\Cache;
 
 use App\Lists\Item;
 
-class LRU
+class LRU implements SimpleCache
 {
     private array $store = [];
     private int $size;
