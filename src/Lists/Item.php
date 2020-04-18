@@ -44,4 +44,21 @@ class Item
     {
         return $this->value;
     }
+
+    public function prepend(self $next): void
+    {
+        $this->setNext($next);
+        $next->setPrev($this);
+    }
+
+    public function append(self $prev): void
+    {
+        $this->setPrev($prev);
+        $prev->setNext($this);
+    }
+
+    public function __toString()
+    {
+        return $this->key ?? '';
+    }
 }

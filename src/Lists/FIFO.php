@@ -45,8 +45,7 @@ class FIFO
         }
 
         $this->count++;
-        $item->setPrev($this->last);
-        $this->last->setNext($item);
+        $this->last->prepend($item);
         $this->last = $item;
         $this->checkQueueSize();
     }

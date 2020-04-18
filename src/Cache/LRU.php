@@ -62,21 +62,19 @@ class LRU implements SimpleCache
         }
 
         if ($itemToMove === $this->first) {
-            $itemToMove->next()->setPrev(null);
-            $this->first = $itemToMove->next();
-            $itemToMove->setPrev($this->last);
-            $itemToMove->setNext(null);
-            $this->last->setNext($itemToMove);
+            $this->last->prepend($itemToMove);
             $this->last = $itemToMove;
+            $this->first = $itemToMove->next();
+
+            $this->first->setPrev(null);
+            $this->last->setNext(null);
 
             return;
         }
 
-        $this->last->setNext($itemToMove);
-        $itemToMove->next()->setPrev($itemToMove->prev());
-        $itemToMove->prev()->setNext($itemToMove->next());
-        $itemToMove->setPrev($this->last);
-        $itemToMove->setNext(null);
+        $itemToMove->prev()->prepend($itemToMove->next());
+        $this->last->prepend($itemToMove);
         $this->last = $itemToMove;
+        $this->last->setNext(null);
     }
 }
