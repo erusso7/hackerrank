@@ -9,7 +9,6 @@ class LRU implements SimpleCache
     private array $store = [];
     private int $size;
 
-    private int $count = 0;
     private ?Item $first = null;
     private ?Item $last = null;
 
@@ -18,11 +17,10 @@ class LRU implements SimpleCache
         $this->size = $size;
     }
 
-    public function put($key, $value): void
+    public function put($key, $value, ?int $microTtu = null): void
     {
         $newItem = new Item($value, $key);
-        if ($this->count === 0) {
-            $this->count++;
+        if (count($this->store) === 0) {
             $this->first = $newItem;
             $this->last = $newItem;
             $this->store[$key] = $newItem;
@@ -30,14 +28,12 @@ class LRU implements SimpleCache
             return;
         }
 
-        if ($this->count === $this->size) {
-            $this->count--;
+        if (count($this->store) === $this->size) {
             unset($this->store[$this->first->key()]);
             $this->first = $this->first->next();
             $this->first->setPrev(null);
         }
 
-        $this->count++;
         $this->store[$key] = $newItem;
         $newItem->setPrev($this->last);
         $this->last->setNext($newItem);

@@ -28,4 +28,15 @@ class ItemTest extends TestCase
         $this->assertSame($second, $first->prev());
         $this->assertSame($first, $second->next());
     }
+
+    public function testItShouldKnowIfItIsExpired()
+    {
+        $now = microtime(true);
+
+        $valid = new Item(1, 'key-1', $now + 1000);
+        $this->assertFalse($valid->isExpired());
+
+        $expired = new Item(2, 'key-2', $now - 1000);
+        $this->assertTrue($expired->isExpired());
+    }
 }

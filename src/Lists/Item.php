@@ -8,11 +8,13 @@ class Item
     private ?self $prev = null;
     private $value;
     private $key;
+    private ?float $expiresAt;
 
-    public function __construct($value, $key = null)
+    public function __construct($value, $key = null, ?float $expiresAt = 0)
     {
         $this->value = $value;
         $this->key = $key;
+        $this->expiresAt = $expiresAt;
     }
 
     public function key()
@@ -55,6 +57,11 @@ class Item
     {
         $this->setPrev($prev);
         $prev->setNext($this);
+    }
+
+    public function isExpired(): bool
+    {
+        return $this->expiresAt < microtime(true);
     }
 
     public function __toString()

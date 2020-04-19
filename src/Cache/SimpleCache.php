@@ -10,7 +10,7 @@ namespace App\Cache;
  */
 interface SimpleCache
 {
-    public function put($key, $value): void;
+    public function put($key, $value, ?int $microTtu = null): void;
 
     public function get($key);
 }
