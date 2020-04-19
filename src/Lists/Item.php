@@ -47,16 +47,22 @@ class Item
         return $this->value;
     }
 
-    public function prepend(self $next): void
+    public function prepend(?self $next): void
     {
         $this->setNext($next);
-        $next->setPrev($this);
+
+        if ($next !== null) {
+            $next->setPrev($this);
+        }
     }
 
-    public function append(self $prev): void
+    public function append(?self $prev): void
     {
         $this->setPrev($prev);
-        $prev->setNext($this);
+
+        if ($prev !== null) {
+            $prev->setNext($this);
+        }
     }
 
     public function isExpired(): bool

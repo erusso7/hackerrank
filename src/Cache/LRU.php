@@ -9,8 +9,8 @@ class LRU implements SimpleCache
     private array $store = [];
     private int $size;
 
-    private ?Item $first = null;
-    private ?Item $last = null;
+    private ?Item $lru = null;
+    private ?Item $mru = null;
 
     public function __construct(int $size)
     {
@@ -19,25 +19,19 @@ class LRU implements SimpleCache
 
     public function put($key, $value, ?int $microTtu = null): void
     {
-        $newItem = new Item($value, $key);
-        if (count($this->store) === 0) {
-            $this->first = $newItem;
-            $this->last = $newItem;
-            $this->store[$key] = $newItem;
-
-            return;
-        }
-
         if (count($this->store) === $this->size) {
-            unset($this->store[$this->first->key()]);
-            $this->first = $this->first->next();
-            $this->first->setPrev(null);
+            $this->unsetTheLRU();
         }
+
+        $newItem = new Item($value, $key);
+        if ($this->lru === null) {
+            $this->lru = $newItem;
+        }
+
+        $newItem->append($this->mru);
+        $this->mru = $newItem;
 
         $this->store[$key] = $newItem;
-        $newItem->setPrev($this->last);
-        $this->last->setNext($newItem);
-        $this->last = $newItem;
     }
 
     public function get($key)
@@ -53,24 +47,23 @@ class LRU implements SimpleCache
 
     private function setTheElementAsTheMRU(Item $itemToMove)
     {
-        if ($itemToMove === $this->last) {
+        if ($itemToMove === $this->mru) {
             return;
         }
 
-        if ($itemToMove === $this->first) {
-            $this->last->prepend($itemToMove);
-            $this->last = $itemToMove;
-            $this->first = $itemToMove->next();
+        $itemToMove->next()->append($itemToMove->prev());
+        $this->mru->prepend($itemToMove);
+        $this->mru = $itemToMove;
 
-            $this->first->setPrev(null);
-            $this->last->setNext(null);
-
-            return;
+        if ($itemToMove === $this->lru) {
+            $this->lru = $itemToMove->next();
         }
+    }
 
-        $itemToMove->prev()->prepend($itemToMove->next());
-        $this->last->prepend($itemToMove);
-        $this->last = $itemToMove;
-        $this->last->setNext(null);
+    private function unsetTheLRU(): void
+    {
+        unset($this->store[$this->lru->key()]);
+        $this->lru = $this->lru->next();
+        $this->lru->setPrev(null);
     }
 }
