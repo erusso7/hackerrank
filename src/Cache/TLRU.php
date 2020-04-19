@@ -4,8 +4,9 @@ namespace App\Cache;
 
 use App\Lists\Item;
 
-class LRU implements SimpleCache
+class TLRU implements SimpleCache
 {
+    /** @var Item[] $store */
     private array $store = [];
     private int $size;
 
@@ -23,7 +24,8 @@ class LRU implements SimpleCache
             $this->unsetTheLRU();
         }
 
-        $newItem = new Item($value, $key);
+        $newItem = new Item($value, $key, $ttu);
+
         if ($this->lru === null) {
             $this->lru = $newItem;
         }
@@ -39,7 +41,14 @@ class LRU implements SimpleCache
         if (!array_key_exists($key, $this->store)) {
             return -1;
         }
+
         $item = $this->store[$key];
+        if ($item->isExpired()) {
+            $this->removeExpiredElement($item);
+
+            return -1;
+        }
+
         $this->setTheElementAsTheMRU($item);
 
         return $item->value();
@@ -65,5 +74,22 @@ class LRU implements SimpleCache
         unset($this->store[$this->lru->key()]);
         $this->lru = $this->lru->next();
         $this->lru->setPrev(null);
+    }
+
+    private function removeExpiredElement(Item $item): void
+    {
+        if ($this->lru === $item) {
+            $this->lru = $item->next();
+        }
+
+        if ($this->mru === $item) {
+            $this->mru = $item->prev();
+        }
+
+        if ($item->prev() !== null) {
+            $item->prev()->append($item->next());
+        }
+
+        unset($this->store[$item->key()]);
     }
 }

@@ -31,12 +31,10 @@ class ItemTest extends TestCase
 
     public function testItShouldKnowIfItIsExpired()
     {
-        $now = microtime(true);
-
-        $valid = new Item(1, 'key-1', $now + 1000);
+        $valid = new Item(1, 'key-1', 500);
         $this->assertFalse($valid->isExpired());
 
-        $expired = new Item(2, 'key-2', $now - 1000);
+        $expired = new Item(2, 'key-2', -500);
         $this->assertTrue($expired->isExpired());
     }
 }

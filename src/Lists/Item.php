@@ -8,13 +8,15 @@ class Item
     private ?self $prev = null;
     private $value;
     private $key;
-    private ?float $expiresAt;
+    private float $expiresAt;
 
-    public function __construct($value, $key = null, ?float $expiresAt = 0)
+    public function __construct($value, $key = null, int $ttuMilliseconds = 0)
     {
         $this->value = $value;
         $this->key = $key;
-        $this->expiresAt = $expiresAt;
+        $this->expiresAt = $ttuMilliseconds === 0
+            ? PHP_INT_MAX
+            : microtime(true) + ($ttuMilliseconds / 1000);
     }
 
     public function key()
