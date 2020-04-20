@@ -6,6 +6,7 @@ use App\Lists\Item;
 
 class LRU implements SimpleCache
 {
+    /** @var Item[] $store */
     private array $store = [];
     private int $size;
 
@@ -19,6 +20,13 @@ class LRU implements SimpleCache
 
     public function put($key, $value, int $ttu = 0): void
     {
+        if (array_key_exists($key, $this->store)) {
+            $this->store[$key]->setValue($value);
+            $this->setTheElementAsTheMRU($key);
+
+            return;
+        }
+
         if (count($this->store) === $this->size) {
             $this->unsetTheLRU();
         }
@@ -40,13 +48,14 @@ class LRU implements SimpleCache
             return -1;
         }
         $item = $this->store[$key];
-        $this->setTheElementAsTheMRU($item);
+        $this->setTheElementAsTheMRU($item->key());
 
         return $item->value();
     }
 
-    private function setTheElementAsTheMRU(Item $itemToMove)
+    private function setTheElementAsTheMRU($key)
     {
+        $itemToMove = $this->store[$key];
         if ($itemToMove === $this->mru) {
             return;
         }
@@ -64,6 +73,8 @@ class LRU implements SimpleCache
     {
         unset($this->store[$this->lru->key()]);
         $this->lru = $this->lru->next();
-        $this->lru->setPrev(null);
+        if ($this->lru !== null) {
+            $this->lru->setPrev(null);
+        }
     }
 }

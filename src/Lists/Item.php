@@ -49,6 +49,13 @@ class Item
         return $this->value;
     }
 
+    public function setValue($value): self
+    {
+        $this->value = $value;
+
+        return $this;
+    }
+
     public function prepend(?self $next): void
     {
         $this->setNext($next);

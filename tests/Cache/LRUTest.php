@@ -100,4 +100,33 @@ class LRUTest extends TestCase
         $this->assertEquals(1, $cache->get('key-1'));
         $this->assertEquals(4, $cache->get('key-4'));
     }
+
+    /** @dataProvider leetCodeTestCases */
+    public function testWithGivenTestCasesFromLeetCode($size, $inputs, $expected)
+    {
+        $cache = new LRU($size);
+        $results = [];
+        foreach ($inputs as $input) {
+            if (count($input) === 1) {
+                $results[] = $cache->get($input[0]);
+                continue;
+            }
+
+            $cache->put($input[0], $input[1]);
+            $results[] = null;
+        }
+
+        $this->assertEquals($expected, $results);
+    }
+
+    public function leetCodeTestCases()
+    {
+        return [
+            'Test case 11' => [
+                'size' => 2,
+                'inputs' => [[2, 1], [1, 1], [2, 3], [4, 1], [1], [2]],
+                'expected' => [null, null, null, null, -1, 3],
+            ],
+        ];
+    }
 }
