@@ -3,15 +3,25 @@
 namespace Tests\Graphs\Trees;
 
 use App\Graphs\Trees\BinaryTree;
+use App\Graphs\Trees\BinaryTreeStack;
 use App\Graphs\Trees\TreeNode;
 use PHPUnit\Framework\TestCase;
 
 class BinaryTreeTest extends TestCase
 {
     /** @dataProvider serializerTestCases */
-    public function testItShouldInsertTheElements(TreeNode $root, $expectedPaths)
+    public function testSolutionWithArrays(?TreeNode $root, $expectedPaths)
     {
         $sut = new BinaryTree;
+        $paths = $sut->binaryTreePaths($root);
+
+        $this->assertEquals($expectedPaths, $paths);
+    }
+
+    /** @dataProvider serializerTestCases */
+    public function testSolutionWithAStack(?TreeNode $root, $expectedPaths)
+    {
+        $sut = new BinaryTreeStack;
         $paths = $sut->binaryTreePaths($root);
 
         $this->assertEquals($expectedPaths, $paths);
@@ -20,6 +30,10 @@ class BinaryTreeTest extends TestCase
     public function serializerTestCases()
     {
         return [
+            'tree is empty' => [
+                'root' => null,
+                'expected' => [],
+            ],
             'tree 1 element' => [
                 'root' => new TreeNode(1),
                 'expected' => ['1'],
@@ -56,6 +70,4 @@ class BinaryTreeTest extends TestCase
             ],
         ];
     }
-
-
 }
