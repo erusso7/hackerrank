@@ -7,25 +7,11 @@ class IntervalIntersections
     function intervalIntersection(array $a, array $b): array
     {
         $intervals = [];
-        $hasMoreSegments = count($a) > 0 || count($b) > 0;
-        $previousA = [];
-        $previousB = [];
-        while ($hasMoreSegments) {
-            $segA = array_shift($a) ?? []; //warning O(n)
-            $segB = array_shift($b) ?? []; //warning O(n)
 
-            $this->addIntervals($intervals, $segA, $previousB);
-            $this->addIntervals($intervals, $previousA, $segB);
-            $this->addIntervals($intervals, $segA, $segB);
-
-            $hasMoreSegments = count($a) > 0 || count($b) > 0;
-            $previousA = empty($segA) && !empty($segB)
-                ? $previousA
-                : $segA;
-
-            $previousB = empty($segB) && !empty($segA)
-                ? $previousB
-                : $segB;
+        foreach ($a as $segA) {
+            foreach ($b as $segB) {
+                $this->addIntervals($intervals, $segA, $segB);
+            }
         }
 
         return $intervals;
