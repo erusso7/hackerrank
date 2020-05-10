@@ -2,7 +2,7 @@
 
 namespace Tests\Arrays;
 
-use App\Arrays\Arrays\MoveZeroes;
+use App\Arrays\MoveZeroes;
 use PHPUnit\Framework\TestCase;
 
 class MoveZeroesTest extends TestCase
